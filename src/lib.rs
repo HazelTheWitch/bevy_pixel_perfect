@@ -1,12 +1,22 @@
 mod render;
 
-use bevy::{prelude::*, render::{extract_component::{ExtractComponent, ExtractComponentPlugin, UniformComponentPlugin}, render_resource::ShaderType, RenderApp, render_graph::{RenderGraphApp, ViewNodeRunner}}, asset::load_internal_asset, core_pipeline::core_2d};
+use bevy::{
+    asset::load_internal_asset,
+    core_pipeline::core_2d,
+    prelude::*,
+    render::{
+        extract_component::{ExtractComponent, ExtractComponentPlugin, UniformComponentPlugin},
+        render_graph::{RenderGraphApp, ViewNodeRunner},
+        render_resource::ShaderType,
+        RenderApp,
+    },
+};
 use render::PixelPerfectPipeline;
 
-use crate::render::{PIXEL_PERFECT_SHADER_HANDLE, PixelPerfectNode};
+use crate::render::{PixelPerfectNode, PIXEL_PERFECT_SHADER_HANDLE};
 
 /// A pixel perfect post processing effect based on [Aarthificial's Astortion renderer](https://www.youtube.com/watch?v=jguyR4yJb1M).
-/// 
+///
 /// Be sure to set image sampling mode to nearest when using this plugin!
 pub struct PixelPerfectPlugin;
 
@@ -71,14 +81,19 @@ pub struct PixelPerfectCamera {
 
 impl Default for PixelPerfectCamera {
     fn default() -> Self {
-        Self { resolution: Vec2::splat(256.), subpixel_position: Default::default(), bar_color: Color::BLACK }
+        Self {
+            resolution: Vec2::splat(256.),
+            subpixel_position: Default::default(),
+            bar_color: Color::BLACK,
+        }
     }
 }
 
-fn update_transform(
-    mut query: Query<(&mut Transform, &mut PixelPerfectCamera)>,
-) {
+fn update_transform(mut query: Query<(&mut Transform, &mut PixelPerfectCamera)>) {
     for (mut transform, camera) in &mut query {
-        transform.translation = camera.subpixel_position.floor().extend(transform.translation.z);
+        transform.translation = camera
+            .subpixel_position
+            .floor()
+            .extend(transform.translation.z);
     }
 }
