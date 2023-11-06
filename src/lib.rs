@@ -5,6 +5,9 @@ use render::PixelPerfectPipeline;
 
 use crate::render::{PIXEL_PERFECT_SHADER_HANDLE, PixelPerfectNode};
 
+/// A pixel perfect post processing effect based on [Aarthificial's Astortion renderer](https://www.youtube.com/watch?v=jguyR4yJb1M).
+/// 
+/// Be sure to set image sampling mode to nearest when using this plugin!
 pub struct PixelPerfectPlugin;
 
 impl Plugin for PixelPerfectPlugin {
@@ -51,17 +54,25 @@ impl Plugin for PixelPerfectPlugin {
     }
 }
 
+/// Minimal pixel perfect camera bundle
 #[derive(Bundle, Default)]
 pub struct PixelPerfectCameraBundle {
     pub pixel_camera: PixelPerfectCamera,
     pub camera: Camera2dBundle,
 }
 
-#[derive(Component, Default, Clone, Copy, ExtractComponent, ShaderType)]
+/// Set desired virtual resolution with `resolution` and move it with `subpixel_position`. Set the bar color with `bar_color`.
+#[derive(Component, Clone, Copy, ExtractComponent, ShaderType)]
 pub struct PixelPerfectCamera {
     pub resolution: Vec2,
     pub subpixel_position: Vec2,
     pub bar_color: Color,
+}
+
+impl Default for PixelPerfectCamera {
+    fn default() -> Self {
+        Self { resolution: Vec2::splat(256.), subpixel_position: Default::default(), bar_color: Color::BLACK }
+    }
 }
 
 fn update_transform(

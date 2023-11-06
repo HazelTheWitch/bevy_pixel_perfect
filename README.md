@@ -9,6 +9,8 @@ A pixel perfect post processing effect based on [Aarthificial's Astortion render
 1. Add the `PixelPerfectCamera` component to your camera and set the `resolution` field to the desired virtual resolution.
 1. Move the camera with `subpixel_position` instead of translation.
 
+Check `examples` for full usage example.
+
 |`bevy`|`bevy_pixel_pefect`|
 |------|-------------------|
 |`0.12`|`0.1`              |
