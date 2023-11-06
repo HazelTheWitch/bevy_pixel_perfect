@@ -34,5 +34,6 @@ fn fragment(in: FullscreenVertexOutput) -> @location(0) vec4<f32> {
 
     let color = textureSample(screen_texture, texture_sampler, scaled_uv);
 
-    return mix(color, camera.bar_color, bar_mask);
+    // The color with bars applied but before the "hard" bars at end of the screen
+    return mix(color, camera.bar_color, bar_mask * camera.bar_color.a);
 }
