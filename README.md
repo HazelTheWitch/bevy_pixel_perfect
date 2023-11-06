@@ -1,5 +1,7 @@
 # bevy_pixel_pefect
 
+![A showcase of bevy_pixel_perfect](/showcase.gif)
+
 A pixel perfect post processing effect based on [Aarthificial's Astortion renderer](https://www.youtube.com/watch?v=jguyR4yJb1M).
 
 ## Usage
