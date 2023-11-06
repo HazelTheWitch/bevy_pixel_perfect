@@ -23,10 +23,7 @@ fn fragment(in: FullscreenVertexOutput) -> @location(0) vec4<f32> {
     // (-w / 2, -h / 2) -> (w / 2, h / 2)
     let screen_coordinates = view.viewport.xy + (in.uv - 0.5) * view.viewport.zw;
 
-    // (-1, -1) -> (1, 1) in scaled coords
-    let scaled_virtual = screen_coordinates / (scaling * 0.5 * camera.resolution);
-
-    let bar_mask = step(1.0, max_component(abs(scaled_virtual)));
+    let bar_mask = max_component(step(scaling * camera.resolution, 2.0 * abs(screen_coordinates)));
 
     let color = textureSample(screen_texture, texture_sampler, (in.uv - 0.5) / scaling + 0.5);
 
