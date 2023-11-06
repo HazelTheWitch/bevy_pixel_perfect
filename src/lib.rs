@@ -77,6 +77,7 @@ pub struct PixelPerfectCamera {
     pub resolution: Vec2,
     pub subpixel_position: Vec2,
     pub bar_color: Color,
+    pub bar_offset: Vec2,
 }
 
 impl Default for PixelPerfectCamera {
@@ -85,6 +86,7 @@ impl Default for PixelPerfectCamera {
             resolution: Vec2::splat(256.),
             subpixel_position: Default::default(),
             bar_color: Color::BLACK,
+            bar_offset: Default::default(),
         }
     }
 }

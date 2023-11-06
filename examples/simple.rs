@@ -18,8 +18,7 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
     commands.spawn(PixelPerfectCameraBundle {
         pixel_camera: PixelPerfectCamera {
             resolution: Vec2::splat(64.),
-            subpixel_position: Vec2::ZERO,
-            bar_color: Color::BLACK,
+            ..Default::default()
         },
         ..Default::default()
     });
