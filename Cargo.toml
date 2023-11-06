@@ -1,0 +1,11 @@
+[package]
+name = "bevy_pixel_perfect"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+bevy = { version = "0.12", default-features = false, features = ["bevy_render", "bevy_core_pipeline"] }
+
+
+[dev-dependencies]
+bevy = "0.12"
