@@ -19,7 +19,9 @@ impl Plugin for PixelPerfectPlugin {
         app.add_plugins((
             ExtractComponentPlugin::<PixelPerfectCamera>::default(),
             UniformComponentPlugin::<PixelPerfectCamera>::default(),
-        ));
+        ))
+        .insert_resource(Msaa::Off)
+        .add_systems(Update, update_transform);
 
         let Ok(render_app) = app.get_sub_app_mut(RenderApp) else {
             return;
@@ -60,4 +62,12 @@ pub struct PixelPerfectCamera {
     pub resolution: Vec2,
     pub subpixel_position: Vec2,
     pub bar_color: Color,
+}
+
+fn update_transform(
+    mut query: Query<(&mut Transform, &mut PixelPerfectCamera)>,
+) {
+    for (mut transform, camera) in &mut query {
+        transform.translation = camera.subpixel_position.floor().extend(transform.translation.z);
+    }
 }
