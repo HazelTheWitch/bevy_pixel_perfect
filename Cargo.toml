@@ -2,6 +2,10 @@
 name = "bevy_pixel_perfect"
 version = "0.1.0"
 edition = "2021"
+license = "MIT OR Apache-2.0"
+description = "Pixel perfect post processing effect for Bevy similar to that in Astortion. "
+repository = "https://github.com/HazelTheWitch/bevy_pixel_perfect"
+readme = "README.md"
 
 [dependencies]
 bevy = { version = "0.12", default-features = false, features = ["bevy_render", "bevy_core_pipeline"] }
