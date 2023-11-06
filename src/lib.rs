@@ -9,7 +9,7 @@ use bevy::{
         render_graph::{RenderGraphApp, ViewNodeRunner},
         render_resource::ShaderType,
         RenderApp,
-    },
+    }, transform::TransformSystem,
 };
 use render::PixelPerfectPipeline;
 
@@ -34,10 +34,10 @@ impl Plugin for PixelPerfectPlugin {
             UniformComponentPlugin::<PixelPerfectCamera>::default(),
         ))
         .insert_resource(Msaa::Off)
-        .add_systems(Update, update_transform);
+        .add_systems(PostUpdate, update_transform.before(TransformSystem::TransformPropagate));
 
         let Ok(render_app) = app.get_sub_app_mut(RenderApp) else {
-            return;
+            return; 
         };
 
         render_app
