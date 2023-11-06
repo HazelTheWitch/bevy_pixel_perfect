@@ -14,7 +14,7 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
     commands.spawn(PixelPerfectCameraBundle {
         pixel_camera: PixelPerfectCamera {
             resolution: Vec2::splat(128.),
-            bar_color: Color::BLACK.with_a(0.5),
+            bar_color: Color::BLACK.with_a(0.8),
             ..Default::default()
         },
         ..Default::default()
@@ -33,7 +33,6 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
 
 fn modify_camera(mut cameras: Query<&mut PixelPerfectCamera>, time: Res<Time>) {
     for mut camera in &mut cameras {
-        camera.subpixel_position.x = (time.elapsed_seconds() / 2.0).sin() * 64.0;
         camera.bar_offset.x = (time.elapsed_seconds() / 4.0).sin() * 48.0;
     }
 }
