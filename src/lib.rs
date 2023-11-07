@@ -8,12 +8,18 @@ use bevy::{
         extract_component::{ExtractComponent, ExtractComponentPlugin, UniformComponentPlugin},
         render_graph::{RenderGraphApp, ViewNodeRunner},
         render_resource::ShaderType,
-        RenderApp,
+        RenderApp, camera::CameraUpdateSystem,
     }, transform::TransformSystem,
 };
 use render::PixelPerfectPipeline;
 
 use crate::render::{PixelPerfectNode, PIXEL_PERFECT_SHADER_HANDLE};
+
+#[derive(SystemSet, Debug, Clone, Copy, PartialEq, Eq, Hash)]
+pub enum PixelPerfectSet {
+    Pixelation,
+    TransformPropagate,
+}
 
 /// A pixel perfect post processing effect based on [Aarthificial's Astortion renderer](https://www.youtube.com/watch?v=jguyR4yJb1M).
 ///
@@ -34,7 +40,11 @@ impl Plugin for PixelPerfectPlugin {
             UniformComponentPlugin::<PixelPerfectCamera>::default(),
         ))
         .insert_resource(Msaa::Off)
-        .add_systems(PostUpdate, update_transform.before(TransformSystem::TransformPropagate));
+        .configure_sets(PostUpdate, (PixelPerfectSet::Pixelation, PixelPerfectSet::TransformPropagate).chain())
+        .configure_sets(PostUpdate, PixelPerfectSet::Pixelation.before(CameraUpdateSystem))
+        .configure_sets(PostUpdate, PixelPerfectSet::TransformPropagate.before(TransformSystem::TransformPropagate))
+        .add_systems(PostUpdate, (pixelate_added, update_pixelation_resolution).chain().in_set(PixelPerfectSet::Pixelation))
+        .add_systems(PostUpdate, update_transform.in_set(PixelPerfectSet::TransformPropagate));
 
         let Ok(render_app) = app.get_sub_app_mut(RenderApp) else {
             return; 
@@ -84,6 +94,23 @@ pub struct PixelPerfectCamera {
     pub bar_offset: Vec2,
 }
 
+/// Component which causes a pixelation effect of the virtual resolution, add it to the camera along with [`PixelPerfectCamera`].
+#[derive(Component, Default)]
+pub struct PixelPerfectPixelation {
+    /// Represents the number of times pixels are joined together in the pixelation effect. Must be non-negative.
+    /// 
+    /// resolution = starting_resolution / 2 ^ joins
+    pub joins: f32,
+    starting_resolution: Vec2,
+}
+
+impl PixelPerfectPixelation {
+    pub fn from_joins(joins: f32) -> Self {
+        Self { joins, ..Default::default() }
+    }
+}
+
+
 impl Default for PixelPerfectCamera {
     fn default() -> Self {
         Self {
@@ -95,11 +122,33 @@ impl Default for PixelPerfectCamera {
     }
 }
 
-fn update_transform(mut query: Query<(&mut Transform, &mut PixelPerfectCamera)>) {
+fn update_transform(mut query: Query<(&mut Transform, &PixelPerfectCamera), Changed<PixelPerfectCamera>>) {
     for (mut transform, camera) in &mut query {
         transform.translation = camera
             .subpixel_translation
             .floor()
             .extend(transform.translation.z);
+    }
+}
+
+fn pixelate_added(
+    mut query: Query<(&mut PixelPerfectPixelation, &PixelPerfectCamera), Added<PixelPerfectPixelation>>,
+) {
+    for (mut pixelation, camera) in &mut query {
+        pixelation.starting_resolution = camera.resolution;
+        println!("Set Starting resolution {}", camera.resolution);
+    }
+}
+
+fn update_pixelation_resolution(
+    mut query: Query<(&mut PixelPerfectCamera, &mut OrthographicProjection, &PixelPerfectPixelation), Changed<PixelPerfectPixelation>>,
+) {
+    for (mut camera, mut projection, pixelation) in &mut query {
+        assert!(pixelation.joins >= 0.0, "joins must be non-negative");
+
+        let scale_factor = 2.0f32.powf(-pixelation.joins);
+
+        camera.resolution = pixelation.starting_resolution * scale_factor;
+        projection.scale = 1.0 / scale_factor;
     }
 }
