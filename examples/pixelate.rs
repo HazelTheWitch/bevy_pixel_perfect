@@ -11,27 +11,33 @@ fn main() {
 }
 
 fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
-    commands.spawn(PixelPerfectCameraBundle {
-        pixel_camera: PixelPerfectCamera {
-            resolution: Vec2::splat(128.),
+    commands.spawn((
+        PixelPerfectCameraBundle {
+            pixel_camera: PixelPerfectCamera {
+                resolution: Vec2::splat(256.),
+                ..Default::default()
+            },
             ..Default::default()
         },
-        ..Default::default()
-    });
+        PixelPerfectPixelation::default(),
+    ));
 
     commands.spawn(
         SpriteBundle {
-            texture: asset_server.load("bevy_pixel.png"),
+            texture: asset_server.load("bevy.png"),
             ..Default::default()
         }
     );
 }
 
-fn modify_resolution(mut query: Query<(&mut PixelPerfectCamera, &mut OrthographicProjection)>, time: Res<Time>) {
-    for (mut camera, mut projection) in &mut query {
-        let size = 63.0 * time.elapsed_seconds().sin() + 64.0;
+fn modify_resolution(mut query: Query<&mut PixelPerfectPixelation>, keys: Res<Input<KeyCode>>) {
+    let amount = if keys.pressed(KeyCode::ShiftLeft) { 0.2 } else { 1.0 };
 
-        camera.resolution = Vec2::splat(size);
-        projection.scale = 128.0 / size;
+    if keys.just_pressed(KeyCode::W) {
+        let mut pixelation = query.single_mut();
+        pixelation.joins = (pixelation.joins + amount).min(6.0);
+    } else if keys.just_pressed(KeyCode::S) {
+        let mut pixelation = query.single_mut();
+        pixelation.joins = (pixelation.joins - amount).max(0.0);
     }
 }
