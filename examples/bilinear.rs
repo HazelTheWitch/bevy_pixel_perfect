@@ -1,8 +1,11 @@
+/// This example is the same as simple with the bilinear feature required. Notice the lack of aliasing when the image scales.
+
 use bevy::prelude::*;
 use bevy_pixel_perfect::*;
 
 fn main() {
     App::new()
+        // Note the image filtering mode is still set to nearest, since we are upscaling in shader bilinear filtering will destroy the texture
         .add_plugins(DefaultPlugins.set(ImagePlugin::default_nearest()))
         .add_plugins(PixelPerfectPlugin)
         .add_systems(Startup, setup)

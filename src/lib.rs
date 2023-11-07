@@ -71,12 +71,16 @@ pub struct PixelPerfectCameraBundle {
     pub camera: Camera2dBundle,
 }
 
-/// Set desired virtual resolution with `resolution` and move it with `subpixel_position`. Set the bar color with `bar_color`.
+/// Marks a camera as pixel perfect
 #[derive(Component, Clone, Copy, ExtractComponent, ShaderType)]
 pub struct PixelPerfectCamera {
+    /// The virtual resolution of the image
     pub resolution: Vec2,
-    pub subpixel_position: Vec2,
+    /// The subpixel translation of the camera, use this instead of [`Transform::translation`]
+    pub subpixel_translation: Vec2,
+    /// The color of the bars on the edge of the image, supports alpha transparency
     pub bar_color: Color,
+    /// The offset in virtual coordinates of the bars, positive values shrink the view, negative expand it
     pub bar_offset: Vec2,
 }
 
@@ -84,7 +88,7 @@ impl Default for PixelPerfectCamera {
     fn default() -> Self {
         Self {
             resolution: Vec2::splat(256.),
-            subpixel_position: Default::default(),
+            subpixel_translation: Default::default(),
             bar_color: Color::BLACK,
             bar_offset: Default::default(),
         }
@@ -94,7 +98,7 @@ impl Default for PixelPerfectCamera {
 fn update_transform(mut query: Query<(&mut Transform, &mut PixelPerfectCamera)>) {
     for (mut transform, camera) in &mut query {
         transform.translation = camera
-            .subpixel_position
+            .subpixel_translation
             .floor()
             .extend(transform.translation.z);
     }
