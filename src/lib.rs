@@ -48,18 +48,10 @@ impl Plugin for PixelPerfectPlugin {
         .configure_sets(
             PostUpdate,
             (
-                PixelPerfectSet::Pixelation,
-                PixelPerfectSet::TransformPropagate,
+                PixelPerfectSet::Pixelation.before(CameraUpdateSystem),
+                PixelPerfectSet::TransformPropagate.before(TransformSystem::TransformPropagate),
             )
                 .chain(),
-        )
-        .configure_sets(
-            PostUpdate,
-            PixelPerfectSet::Pixelation.before(CameraUpdateSystem),
-        )
-        .configure_sets(
-            PostUpdate,
-            PixelPerfectSet::TransformPropagate.before(TransformSystem::TransformPropagate),
         )
         .add_systems(
             PostUpdate,
