@@ -10,7 +10,10 @@ fn main() {
         .run();
 }
 
-fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
+fn setup(
+    mut commands: Commands,
+    asset_server: Res<AssetServer>,
+) {
     commands.spawn(PixelPerfectCameraBundle {
         pixel_camera: PixelPerfectCamera {
             resolution: Vec2::splat(128.),
@@ -21,17 +24,18 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
     });
 
     for i in -2..=2 {
-        commands.spawn(
-            SpriteBundle {
-                texture: asset_server.load("bevy_pixel.png"),
-                transform: Transform::from_translation(Vec3::new(i as f32 * 128.0, 0.0, 0.0)),
-                ..Default::default()
-            },
-        );
+        commands.spawn(SpriteBundle {
+            texture: asset_server.load("bevy_pixel.png"),
+            transform: Transform::from_translation(Vec3::new(i as f32 * 128.0, 0.0, 0.0)),
+            ..Default::default()
+        });
     }
 }
 
-fn modify_camera(mut cameras: Query<&mut PixelPerfectCamera>, time: Res<Time>) {
+fn modify_camera(
+    mut cameras: Query<&mut PixelPerfectCamera>,
+    time: Res<Time>,
+) {
     for mut camera in &mut cameras {
         camera.bar_offset.x = (time.elapsed_seconds() / 4.0).sin() * 48.0;
     }

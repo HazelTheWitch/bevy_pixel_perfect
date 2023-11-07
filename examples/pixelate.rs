@@ -10,7 +10,10 @@ fn main() {
         .run();
 }
 
-fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
+fn setup(
+    mut commands: Commands,
+    asset_server: Res<AssetServer>,
+) {
     commands.spawn((
         PixelPerfectCameraBundle {
             pixel_camera: PixelPerfectCamera {
@@ -22,16 +25,21 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
         PixelPerfectPixelation::default(),
     ));
 
-    commands.spawn(
-        SpriteBundle {
-            texture: asset_server.load("bevy.png"),
-            ..Default::default()
-        }
-    );
+    commands.spawn(SpriteBundle {
+        texture: asset_server.load("bevy.png"),
+        ..Default::default()
+    });
 }
 
-fn modify_resolution(mut query: Query<&mut PixelPerfectPixelation>, keys: Res<Input<KeyCode>>) {
-    let amount = if keys.pressed(KeyCode::ShiftLeft) { 0.2 } else { 1.0 };
+fn modify_resolution(
+    mut query: Query<&mut PixelPerfectPixelation>,
+    keys: Res<Input<KeyCode>>,
+) {
+    let amount = if keys.pressed(KeyCode::ShiftLeft) {
+        0.2
+    } else {
+        1.0
+    };
 
     if keys.just_pressed(KeyCode::W) {
         let mut pixelation = query.single_mut();

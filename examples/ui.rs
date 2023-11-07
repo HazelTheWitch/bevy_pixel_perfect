@@ -11,7 +11,10 @@ fn main() {
         .run();
 }
 
-fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
+fn setup(
+    mut commands: Commands,
+    asset_server: Res<AssetServer>,
+) {
     commands.spawn(PixelPerfectCameraBundle {
         pixel_camera: PixelPerfectCamera {
             resolution: Vec2::splat(128.),
@@ -20,12 +23,10 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
         ..Default::default()
     });
 
-    commands.spawn(
-        SpriteBundle {
-            texture: asset_server.load("bevy_pixel.png"),
-            ..Default::default()
-        }
-    );
+    commands.spawn(SpriteBundle {
+        texture: asset_server.load("bevy_pixel.png"),
+        ..Default::default()
+    });
 
     commands.spawn(
         TextBundle::from_section(
@@ -33,11 +34,13 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
             TextStyle {
                 font_size: 64.0,
                 ..Default::default()
-            }).with_style(Style { 
-                position_type: PositionType::Absolute,
-                bottom: Val::Px(5.0),
-                right: Val::Px(5.0),
-                ..Default::default()
+            },
+        )
+        .with_style(Style {
+            position_type: PositionType::Absolute,
+            bottom: Val::Px(5.0),
+            right: Val::Px(5.0),
+            ..Default::default()
         }),
     );
 }

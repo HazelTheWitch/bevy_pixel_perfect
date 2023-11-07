@@ -13,7 +13,10 @@ fn main() {
 #[derive(Component)]
 struct Rotate;
 
-fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
+fn setup(
+    mut commands: Commands,
+    asset_server: Res<AssetServer>,
+) {
     commands.spawn(PixelPerfectCameraBundle {
         pixel_camera: PixelPerfectCamera {
             resolution: Vec2::splat(64.),
@@ -32,7 +35,10 @@ fn setup(mut commands: Commands, asset_server: Res<AssetServer>) {
     ));
 }
 
-fn modify_resolution(mut query: Query<&mut PixelPerfectCamera>, time: Res<Time>) {
+fn modify_resolution(
+    mut query: Query<&mut PixelPerfectCamera>,
+    time: Res<Time>,
+) {
     for mut camera in &mut query {
         camera.resolution = Vec2::splat(16.0 * time.elapsed_seconds().sin() + 64.0);
         camera.subpixel_translation.x = 16.0 * (time.elapsed_seconds() / 2.0).sin()
