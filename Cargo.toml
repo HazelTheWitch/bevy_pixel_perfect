@@ -30,3 +30,7 @@ path = "examples/bars.rs"
 [[example]]
 name = "tweening"
 path = "examples/tweening.rs"
+
+[[example]]
+name = "ui"
+path = "examples/ui.rs"
