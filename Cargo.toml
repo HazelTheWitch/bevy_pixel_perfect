@@ -16,7 +16,7 @@ bevy = "0.12"
 bevy_tweening = { git = "https://github.com/arendjr/bevy_tweening.git", branch = "bevy-0.12", default-features = false }
 
 [features]
-default = []
+default = ["bilinear"]
 bilinear = []
 
 [[example]]
@@ -30,8 +30,3 @@ path = "examples/bars.rs"
 [[example]]
 name = "tweening"
 path = "examples/tweening.rs"
-
-[[example]]
-name = "bilinear"
-path = "examples/bilinear.rs"
-required-features = ["bilinear"]
