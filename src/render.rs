@@ -91,6 +91,9 @@ impl FromWorld for PixelPerfectPipeline {
                     vertex: fullscreen_shader_vertex_state(),
                     fragment: Some(FragmentState {
                         shader: PIXEL_PERFECT_SHADER_HANDLE,
+                        #[cfg(feature = "bilinear")]
+                        shader_defs: vec!["BILINEAR".into()],
+                        #[cfg(not(feature = "bilinear"))]
                         shader_defs: vec![],
                         entry_point: "fragment".into(),
                         targets: vec![Some(ColorTargetState {

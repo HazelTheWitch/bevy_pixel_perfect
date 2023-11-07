@@ -13,6 +13,14 @@ A pixel perfect post processing effect based on [Aarthificial's Astortion render
 
 Check `examples` for full usage example.
 
+## Features
+
+### `bilinear` (default)
+
+The `bilinear` feature enables bilinear sampling in the shader. This reduces aliasing in the final texture at the cost of minorly increasing the
+cost of the upscale. **Do not disable nearest neighbor filtering when using this feature, the bilinear sampling is done in shader due to how the upscaling works**.
+If you're experiencing artifacts with this feature enabled try disabling it.
+
 |`bevy`|`bevy_pixel_pefect`|
 |------|-------------------|
 |`0.12`|`0.1`              |

@@ -14,3 +14,19 @@ bevy = { version = "0.12", default-features = false, features = ["bevy_render", 
 [dev-dependencies]
 bevy = "0.12"
 bevy_tweening = { git = "https://github.com/arendjr/bevy_tweening.git", branch = "bevy-0.12", default-features = false }
+
+[features]
+default = ["bilinear"]
+bilinear = []
+
+[[example]]
+name = "simple"
+path = "examples/simple.rs"
+
+[[example]]
+name = "bars"
+path = "examples/bars.rs"
+
+[[example]]
+name = "tweening"
+path = "examples/tweening.rs"
