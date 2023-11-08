@@ -164,7 +164,6 @@ fn pixelate_added(
 ) {
     for (mut pixelation, camera) in &mut query {
         pixelation.starting_resolution = camera.resolution;
-        println!("Set Starting resolution {}", camera.resolution);
     }
 }
 
